@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/Azure/azure-devtestlab/master/schemas/2016-11-28/dtlArtifacts.json",
-  "title": "Lixar2 Join Active Directory (AD) domain",
+  "title": "Lixar Join Active Directory (AD) domain",
   "description": "Joins the virtual machine to the given Active Directory domain and reboots the machine.",
   "publisher": "Microsoft",
   "tags": [
@@ -30,30 +30,10 @@
       "description": "Optional. Only required if you have configured organizational units in your domain; leave blank otherwise. For example, OU=Workstations,OU=Machines,DC=corp,DC=contoso,DC=com. Where 'Workstations' and 'Machines' are 2 organizational units configured in your domain.",
       "allowEmpty": true,
       "defaultValue": ""
-    },
-	"scriptFileUris": {
-		"type": "array",
-		"displayName": "File URI(s)",
-		"description": "All the files to download to the VM for script execution. To specify multiple files, format them as a JSON array (e.g. [\"file1\", \"file2\"])."
-	},
-	"scriptToRun": {
-		"type": "string",
-		"displayName": "Script to Run",
-		"description": "Script file to run."
-	},	
+    }
   },
-  "runAzureVMExtension": {
-      "publisher": "Microsoft.Compute",
-      "type": "CustomScriptExtension",
-      "typeHandlerVersion": "1.9",
-      "autoUpgradeMinorVersion": "true",
-      "settings": {
-        "fileUris": "[parameters('scriptFileUris')]",
-        "commandToExecute": ""
-	},
-  "protectedSettings": {
-		"commandToExecute":"[concat('powershell.exe -ExecutionPolicy bypass \"& ./',parameters('scriptToRun'),' -DomainAdminUsername ''',parameters('domainAdminUsername'),''' -DomainAdminPassword ''',parameters('domainAdminPassword'),''' -DomainToJoin ',	parameters('domainToJoin'),' -OUPath ''',parameters('ouPath'),'''\"')]"
-	}
+  "runCommand": {
+    "commandToExecute": "[concat('powershell.exe \"& ./artifact.ps1', ' -DomainAdminUsername ''', parameters('domainAdminUsername'), ''' -DomainAdminPassword ''', parameters('domainAdminPassword'), ''' -DomainToJoin ', parameters('domainToJoin'), ' -OUPath ''', parameters('ouPath'), '''\"')]"
   },
   "postDeployActions": [
     {
